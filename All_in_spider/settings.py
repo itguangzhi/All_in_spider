@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+from fake_useragent import UserAgent
+ua = UserAgent()
 # Scrapy settings for All_in_spider project
 #
 # For simplicity, this file contains only settings considered important or
@@ -16,7 +17,8 @@ NEWSPIDER_MODULE = 'All_in_spider.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'All_in_spider (+http://www.yourdomain.com)'
+# USER_AGENT = 'All_in_spider (+http://www.yourdomain.com)'
+USER_AGENT = ua.random
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
