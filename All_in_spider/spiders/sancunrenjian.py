@@ -3,7 +3,10 @@ import re
 
 import scrapy
 from scrapy.http import Request
-
+'''
+三寸人间的网站构造很简单，页面上展示的需要后台交互的内容，几乎都来自于数据库，章节文章正文来源于html文件。
+可以通过获取接口中的id来绑定对应的数据文件。达到获取数据的目的。
+'''
 
 class SancunrenjianSpider(scrapy.Spider):
     name = 'sancunrenjian'
