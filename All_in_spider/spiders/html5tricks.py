@@ -23,8 +23,8 @@ class Html5tricksSpider(scrapy.Spider):
         img_url = response.xpath('//div[@class="entry-content"]/p[2]/a/img/@src').extract()
         demo = response.xpath('//p[@class="tricksButtons"]/a[@class="demo"]/@href').extract()
         download = response.xpath('//p[@class="tricksButtons"]/a[@class="download"]/@href').extract()
-        date = response.xpath('//header[@class="entry-header"]/div[3]/text()').extract()
-        for n in range(0,len(tital)):
+        date = response.xpath('//header[@class="entry-header"]/div[3]/text()').extract().replace('\r', '').replace('\n', '')
+        for n in range(0, len(tital)):
             html5tracks['tital'] = tital[n]
             html5tracks['url'] = url[n]
             html5tracks['desc'] = desc[n]
