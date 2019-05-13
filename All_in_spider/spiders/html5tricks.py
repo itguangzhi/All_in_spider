@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
+from All_in_spider.items import Html5tracksItme
 
 
 class Html5tricksSpider(scrapy.Spider):
@@ -14,6 +15,8 @@ class Html5tricksSpider(scrapy.Spider):
         :param response: download请求的结果
         :return: 返回item的信息
         '''
+        html5tracks = Html5tracksItme()
+
         tital = response.xpath('//header[@class="entry-header"]/h1/a/text()').extract()
         url = response.xpath('//header[@class="entry-header"]/h1/a/@href').extract()
         desc = response.xpath('//div[@class="entry-content"]/p[1]').extract()
@@ -21,7 +24,16 @@ class Html5tricksSpider(scrapy.Spider):
         demo = response.xpath('//p[@class="tricksButtons"]/a[@class="demo"]/@href').extract()
         download = response.xpath('//p[@class="tricksButtons"]/a[@class="download"]/@href').extract()
         date = response.xpath('//header[@class="entry-header"]/div[3]/text()').extract()
+        for n in range(0,len(tital)):
+            html5tracks['tital'] = tital[n]
+            html5tracks['url'] = url[n]
+            html5tracks['desc'] = desc[n]
+            html5tracks['img_url'] = img_url[n]
+            html5tracks['demo'] = demo[n]
+            html5tracks['download'] = download[n]
+            html5tracks['date'] = date[n]
 
+            yield html5tracks
 
         next_url = response.xpath('//a[@class="nextpostslink"]/@href').extract_first('-')
         if next_url != "-":

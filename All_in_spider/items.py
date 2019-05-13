@@ -30,3 +30,14 @@ class TianqihoubaoItem(scrapy.Item):
     item_uuid = scrapy.Field()
     wind_light_direction = scrapy.Field()
     wind_black_direction = scrapy.Field()
+
+
+class Html5tracksItme(scrapy.Item):
+    tital = scrapy.Field()
+    url = scrapy.Field()
+    desc = scrapy.Field()
+    img_url = scrapy.Field()
+    demo = scrapy.Field()
+    download = scrapy.Field()
+    date = scrapy.Field()
+
