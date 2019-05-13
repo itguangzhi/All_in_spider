@@ -37,5 +37,5 @@ class Html5tricksSpider(scrapy.Spider):
 
         next_url = response.xpath('//a[@class="nextpostslink"]/@href').extract_first('-')
         if next_url != "-":
-            yield  Request(url=next_url,callback=self.parse)
+            yield Request(url=next_url,callback=self.parse)
 
