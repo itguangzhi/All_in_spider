@@ -8,6 +8,9 @@ from urllib import parse
 from scrapy.http import Request
 from All_in_spider.items import TianqihoubaoItem
 from All_in_spider.utils.common import get_md5
+'''
+天气后报网站中，数据层次结构为 省，市，县三级城市结构，每个月的数据放一页中， 数据表格中的信息为每天的天气、温度和风向信息，
+'''
 
 
 class TianqihoubaoSpider(scrapy.Spider):
