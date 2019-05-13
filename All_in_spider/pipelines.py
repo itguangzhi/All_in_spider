@@ -15,6 +15,7 @@ from twisted.enterprise import adbapi
 
 class AllInSpiderPipeline(object):
     def process_item(self, item, spider):
+        print(item)
         return item
 
 
@@ -156,8 +157,6 @@ class MysqlTwistedPipeline(object):
                                             , item["item_wind_black"])
 
         cursor.execute(insert_sql)
-
-
 
 
 class TianqihoubaoPipeline(object):

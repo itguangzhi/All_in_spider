@@ -74,8 +74,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'All_in_spider.pipelines.AllInSpiderPipeline': 300,
-
-   'All_in_spider.pipelines.MysqlTwistedPipeline': 1,
+   # 'All_in_spider.pipelines.MysqlTwistedPipeline': 1,
 }
 # 'All_in_spider.pipelines.JsonExporterPipeline': 2,
 
