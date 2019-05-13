@@ -32,7 +32,7 @@ class TianqihoubaoItem(scrapy.Item):
     wind_black_direction = scrapy.Field()
 
 
-class Html5tracksItme(scrapy.Item):
+class Html5tracksItem(scrapy.Item):
     tital = scrapy.Field()
     url = scrapy.Field()
     desc = scrapy.Field()
