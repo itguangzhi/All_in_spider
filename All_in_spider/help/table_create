@@ -1,0 +1,88 @@
+## 猫眼电影爬虫
+影视公司表
+```mysql
+CREATE TABLE `maoyan_company_info` (
+  `company_id` int(10) unsigned NOT NULL,
+  `name_cn` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+  `name_en` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `lable` text COLLATE utf8_bin,
+  `member` text COLLATE utf8_bin COMMENT '公司成员（按照"人名/成分,人名/成分,……"）',
+  `nature` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '公司性质（xxx,xxx）',
+  `type` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '公司类型',
+  `childrens` text COLLATE utf8_bin COMMENT '子公司（xxx,xxx）',
+  `connect` text COLLATE utf8_bin COMMENT '联系方式',
+  PRIMARY KEY (`company_id`))
+```
+
+影视作品表
+```mysql
+CREATE TABLE `maoyan_movie_info` (
+  `movie_id` int(10) unsigned NOT NULL,
+  `name_cn` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '中文名',
+  `name_en` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '英文名',
+  `score` varchar(5) COLLATE utf8_bin DEFAULT NULL COMMENT '评分',
+  `lable` text COLLATE utf8_bin COMMENT '介绍',
+  `type` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '影片类型。用，分割多个影片类型',
+  `country_make` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '发行国家',
+  `timeline` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '时长',
+  `release` date DEFAULT NULL COMMENT '国内上映日期',
+  `director` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '导演。（多个用，隔开）',
+  `performer` text COLLATE utf8_bin COMMENT '演员。（多个用,隔开）',
+  `productions` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '出品公司。',
+  `production_makers` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '制作公司',
+  `distributions` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '发行公司',
+  `join_productions` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '联合出品公司',
+  `join_production_makers` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '联合制作公司',
+  `join_distributions` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '联合发行公司',
+  `other_production_makers` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '其他制作公司',
+  `other_productions` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '其他出品公司',
+  `other_distributions` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '其他发行公司',
+  `others` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '其他公司',
+  `technology_parameter` text COLLATE utf8_bin COMMENT '技术参数',
+  PRIMARY KEY (`movie_id`))
+```
+影人信息表
+```mysql
+CREATE TABLE `maoyan_person_info` (
+  `person_id` int(11) unsigned NOT NULL COMMENT '影人ID',
+  `name_cn` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '影人中文名',
+  `name_en` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '英文名',
+  `sex` varchar(1) COLLATE utf8_bin DEFAULT NULL COMMENT '1,男，0，女',
+  `status` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '影人身份',
+  `born` date DEFAULT NULL COMMENT '出生日期',
+  `height` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '身高',
+  `blood` varchar(5) COLLATE utf8_bin DEFAULT NULL COMMENT '血型',
+  `lable` text COLLATE utf8_bin COMMENT '介绍',
+  `school` varchar(30) COLLATE utf8_bin DEFAULT NULL COMMENT '毕业院校',
+  `brokerage` varchar(30) COLLATE utf8_bin DEFAULT NULL COMMENT '经济公司',
+  `nation` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '民族',
+  `nationality` varchar(30) COLLATE utf8_bin DEFAULT NULL COMMENT '国籍',
+  `fans` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '粉丝团体名',
+  `sumpos` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '累计票房，单位亿元',
+  `born_name` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '出生地别名',
+  PRIMARY KEY (`person_id`))
+```
+
+影人获奖表
+```mysql
+CREATE TABLE `maoyan_person_award` (
+  `award_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `person_id` int(11) DEFAULT NULL COMMENT '关联person_info表中的person_id',
+  `award_name` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '奖项名称',
+  `type` varchar(5) COLLATE utf8_bin DEFAULT NULL COMMENT '正常为1，提名为0',
+  `because` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '获奖原因',
+  PRIMARY KEY (`award_id`)
+)
+```
+影片演职人员表
+```mysql
+CREATE TABLE `maoyan_person_roles` (
+  `roles_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `person_id` int(11) DEFAULT NULL COMMENT '关联person_info中的person_id',
+  `movie_name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
+  `movie_id` int(10) unsigned DEFAULT NULL,
+  `role` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '饰演的角色',
+  `role_duty` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '在剧中的成分',
+  `release_year` varchar(4) COLLATE utf8_bin DEFAULT NULL COMMENT '作品上映的年份',
+  PRIMARY KEY (`roles_id`)
+```
