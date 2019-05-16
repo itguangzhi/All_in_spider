@@ -84,5 +84,5 @@ CREATE TABLE `maoyan_person_roles` (
   `role` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '饰演的角色',
   `role_duty` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '在剧中的成分',
   `release_year` varchar(4) COLLATE utf8_bin DEFAULT NULL COMMENT '作品上映的年份',
-  PRIMARY KEY (`roles_id`)
-```
+  PRIMARY KEY (`roles_id`))
+  ```
