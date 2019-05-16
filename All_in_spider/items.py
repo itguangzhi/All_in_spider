@@ -41,3 +41,37 @@ class Html5tracksItem(scrapy.Item):
     download = scrapy.Field()
     date = scrapy.Field()
 
+
+class MaoyanMovieInfoItem(scrapy.Item):
+    """
+    影片信息的item
+    """
+    movie_id = scrapy.Field()
+    name_cn = scrapy.Field()
+    name_en = scrapy.Field()
+    score = scrapy.Field()
+    desc = scrapy.Field()
+    type = scrapy.Field()
+    country_make = scrapy.Field()
+    timeline = scrapy.Field()
+    release = scrapy.Field()
+    director = scrapy.Field()
+    performer = scrapy.Field()
+    productions = scrapy.Field()
+    production_makers = scrapy.Field()
+    distributions = scrapy.Field()
+    join_productions = scrapy.Field()
+    join_production_makers = scrapy.Field()
+    join_distributions = scrapy.Field()
+    other_production_makers = scrapy.Field()
+    other_productions = scrapy.Field()
+    other_distributions = scrapy.Field()
+    others = scrapy.Field()
+    technology_parameter = scrapy.Field()
+
+
+class MaoyanPersonInfoItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    pass
+

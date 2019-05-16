@@ -16,5 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # 三寸人间
 # execute(['scarpy', 'crawl', 'sancunrenjian'])
 # html5tracks
-execute(['scarpy', 'crawl', 'html5tricks'])
+# execute(['scarpy', 'crawl', 'html5tricks'])
+# maoyan
+execute(['scarpy', 'crawl', 'maoyan'])
 

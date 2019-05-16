@@ -21,7 +21,7 @@ CREATE TABLE `maoyan_movie_info` (
   `name_cn` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '中文名',
   `name_en` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '英文名',
   `score` varchar(5) COLLATE utf8_bin DEFAULT NULL COMMENT '评分',
-  `lable` text COLLATE utf8_bin COMMENT '介绍',
+  `desc` text COLLATE utf8_bin COMMENT '介绍',
   `type` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '影片类型。用，分割多个影片类型',
   `country_make` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '发行国家',
   `timeline` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT '时长',
