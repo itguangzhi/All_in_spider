@@ -9,6 +9,7 @@ import json
 
 import pymysql
 import pymysql.cursors
+from scrapy import log
 from twisted.enterprise import adbapi
 
 
@@ -162,3 +163,61 @@ class MysqlTwistedPipeline(object):
 class TianqihoubaoPipeline(object):
     def process_item(self, item, spider):
         return item
+
+
+class MaoyanMysqlPipeline(object):
+    def __init__(self, dbpool):
+        self.dbpool = dbpool
+
+    @classmethod
+    def from_settings(cls, settings):
+        dbparms = dict(
+            host=settings["MYSQL_HOST"],
+            user=settings["MYSQL_USER"],
+            passwd=settings["MYSQL_PASSWORD"],
+            db=settings["MYSQL_DB"],
+            charset='utf8',
+            cursorclass=pymysql.cursors.DictCursor,
+            use_unicode=True
+        )
+        dbpool = adbapi.ConnectionPool('pymysql', **dbparms)
+        return cls(dbpool)
+
+    def process_item(self, item, spider):
+        # 使用twisted将数据插入变成异步执行的内容
+        query = self.dbpool.runInteraction(self.film_insert, item)
+        query.addErrback(self.handle_error)
+
+        # return item
+
+    def handle_error(self, failure):
+        # dbpool异常处理
+        print(failure)
+
+    def film_insert(self, cursor, item):
+        insert_sql = """
+                            replace into maoyan_movie_info (movie_id,
+                                                        name_cn,
+                                                        name_en,
+                                                        score,
+                                                        desc,
+                                                        type,
+                                                        country_make,
+                                                        timeline,
+                                                        release) values (
+                                                       '%s','%s','%s','%s','%s','%s','%s','%s','%s'
+                            )
+                        """ % (item["item_uuid"]
+                                                    , item["movie_id"]
+                                                    , item["name_cn"]
+                                                    , item["name_en"]
+                                                    , item["score"]
+                                                    , item["desc"]
+                                                    , item["type"]
+                                                    , item["country_make"]
+                                                    , item["timeline"]
+                                                    , item["release"]
+                               )
+
+        cursor.execute(insert_sql)
+        log.msg(item["name_cn"] + "----入库成功")
