@@ -13,7 +13,6 @@ from scrapy import log
 from twisted.enterprise import adbapi
 
 
-
 class AllInSpiderPipeline(object):
     def process_item(self, item, spider):
         print(item)
@@ -30,7 +29,7 @@ class JsonWithEncodingPipeline(object):
         self.file.write(line)
         return item
 
-    def spider_closed(self,spider):
+    def spider_closed(self, spider):
         self.file.close()
 
 
@@ -73,7 +72,7 @@ class MysqlPipeline(object):
                                         wind_black_level) values (
                                        '%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'
             )
-        """%(item["item_uuid"]
+        """ % (item["item_uuid"]
                                     , item["post_id"]
                                     , item["item_regsion"]
                                     , item["item_city_name"]
@@ -84,9 +83,9 @@ class MysqlPipeline(object):
                                     , item["item_temperature_light"]
                                     , item["item_temperature_black"]
                                     , item["wind_light_direction"]
-                                    ,item["wind_black_direction"]
-                                    ,item["item_wind_light"]
-                                    ,item["item_wind_black"])
+                                    , item["wind_black_direction"]
+                                    , item["item_wind_light"]
+                                    , item["item_wind_black"])
 
         self.cur.execute(insert_sql)
         self.conn.commit()
@@ -123,8 +122,7 @@ class MysqlTwistedPipeline(object):
         # dbpool异常处理
         print(failure)
 
-
-    def do_insert(self,cursor ,item):
+    def do_insert(self, cursor, item):
         insert_sql = """
                     replace into wheather_info (uuid,
                                                 city_id,
@@ -185,14 +183,20 @@ class MaoyanMysqlPipeline(object):
 
     def process_item(self, item, spider):
         # 使用twisted将数据插入变成异步执行的内容
-        query = self.dbpool.runInteraction(self.film_insert, item)
-        query.addErrback(self.handle_error)
+        try:
+            query = self.dbpool.runInteraction(self.film_insert, item)
+        except:
+            log.msg("影片数据插入异常")
+        query = self.dbpool.runInteraction(self.person_role_insert, item)
+        query.addErrback(self.handle_error, item)
 
         # return item
 
-    def handle_error(self, failure):
+    def handle_error(self, failure, item):
         # dbpool异常处理
-        print(failure)
+        # print(failure)
+        print("movieID:", item["movie_id"])
+        print(item)
 
     def film_insert(self, cursor, item):
         insert_sql = """
@@ -200,15 +204,14 @@ class MaoyanMysqlPipeline(object):
                                                         name_cn,
                                                         name_en,
                                                         score,
-                                                        desc,
-                                                        type,
+                                                        `desc`,
+                                                        `type`,
                                                         country_make,
                                                         timeline,
-                                                        release) values (
+                                                        `release`) values (
                                                        '%s','%s','%s','%s','%s','%s','%s','%s','%s'
                             )
-                        """ % (item["item_uuid"]
-                                                    , item["movie_id"]
+                        """ % (item["movie_id"]
                                                     , item["name_cn"]
                                                     , item["name_en"]
                                                     , item["score"]
@@ -217,6 +220,25 @@ class MaoyanMysqlPipeline(object):
                                                     , item["country_make"]
                                                     , item["timeline"]
                                                     , item["release"]
+                               )
+
+        cursor.execute(insert_sql)
+        log.msg(item["name_cn"] + "----入库成功")
+
+    def person_role_insert(self, cursor, item):
+        insert_sql = """
+                            replace into maoyan_person_roles (person_id,
+                                                            movie_name,
+                                                            movie_id,
+                                                            `role`,
+                                                            role_duty) values (
+                                                       '%d','%s','%d','%s','%s'
+                            )
+                        """ % (item["person_id"]
+                                                    , item["movie_name"]
+                                                    , item["movie_id"]
+                                                    , item["role"]
+                                                    , item["role_duty"]
                                )
 
         cursor.execute(insert_sql)

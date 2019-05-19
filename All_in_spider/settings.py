@@ -23,7 +23,7 @@ USER_AGENT = ua.random
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 # 设置日志级别为Info
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
 # 设置爬虫的并发数量
 CONCURRENT_REQUESTS = 100
 # 设置输出编码为utf8
@@ -101,7 +101,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
-MYSQL_HOST = "192.168.30.120"
+MYSQL_HOST = "localhost"
 MYSQL_USER = "spider"
 MYSQL_PASSWORD = "spider"
 MYSQL_DB = "spiderinc"

@@ -75,3 +75,12 @@ class MaoyanPersonInfoItem(scrapy.Item):
     # name = scrapy.Field()
     pass
 
+
+class MaoyanPersonRoleItem(scrapy.Item):
+    person_id = scrapy.Field()
+    movie_name = scrapy.Field()
+    movie_id = scrapy.Field()
+    role = scrapy.Field()
+    role_duty = scrapy.Field()
+
+
