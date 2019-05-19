@@ -132,6 +132,7 @@ class MaoyanSpider(scrapy.Spider):
         movie_info_item['country_make'] = native
         movie_info_item['timeline'] = int(timeline)
         movie_info_item['release'] = release_date
+        movie_info_item['date_type'] = 'movie'
 
         yield movie_info_item
 
@@ -165,6 +166,8 @@ class MaoyanSpider(scrapy.Spider):
                 maoyanpersonrole['movie_id'] = int(re.findall('\d+', response.url)[0])
                 maoyanpersonrole['role'] = person_role
                 maoyanpersonrole['role_duty'] = celebrity_type
+                maoyanpersonrole['role_id'] = re.findall('\d+', person_url)[0] + re.findall('\d+', response.url)[0] + celebrity_type + person_role
+                maoyanpersonrole['date_type'] = 'roles'
 
                 yield maoyanpersonrole
 

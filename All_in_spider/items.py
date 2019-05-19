@@ -46,6 +46,7 @@ class MaoyanMovieInfoItem(scrapy.Item):
     """
     影片信息的item
     """
+    date_type = scrapy.Field() # 区分不同数据源
     movie_id = scrapy.Field()
     name_cn = scrapy.Field()
     name_en = scrapy.Field()
@@ -77,6 +78,8 @@ class MaoyanPersonInfoItem(scrapy.Item):
 
 
 class MaoyanPersonRoleItem(scrapy.Item):
+    date_type = scrapy.Field() # 区分不同数据源
+    role_id = scrapy.Field()
     person_id = scrapy.Field()
     movie_name = scrapy.Field()
     movie_id = scrapy.Field()

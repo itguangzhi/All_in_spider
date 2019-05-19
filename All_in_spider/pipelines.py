@@ -6,6 +6,7 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import codecs
 import json
+import logging
 
 import pymysql
 import pymysql.cursors
@@ -15,7 +16,7 @@ from twisted.enterprise import adbapi
 
 class AllInSpiderPipeline(object):
     def process_item(self, item, spider):
-        print(item)
+        # print(item)
         return item
 
 
@@ -183,21 +184,23 @@ class MaoyanMysqlPipeline(object):
 
     def process_item(self, item, spider):
         # 使用twisted将数据插入变成异步执行的内容
-        try:
-            query = self.dbpool.runInteraction(self.film_insert, item)
-        except:
-            log.msg("影片数据插入异常")
-        query = self.dbpool.runInteraction(self.person_role_insert, item)
+        if item['date_type'] == 'movie':
+            query = self.dbpool.runInteraction(self.person_role_insert, item)
+        elif item['date_type'] == 'roles':
+            query = self.dbpool.runInteraction(self.person_role_insert, item)
+        else:
+            log.msg("数据格式不正确！")
+            print(item)
         query.addErrback(self.handle_error, item)
 
-        # return item
+        return item
 
     def handle_error(self, failure, item):
         # dbpool异常处理
-        # print(failure)
-        print("movieID:", item["movie_id"])
-        print(item)
-
+        print(failure)
+        # print("movieID:", item["movie_id"])
+        # print(item)
+# 影片数据入库的sql
     def film_insert(self, cursor, item):
         insert_sql = """
                             replace into maoyan_movie_info (movie_id,
@@ -224,22 +227,26 @@ class MaoyanMysqlPipeline(object):
 
         cursor.execute(insert_sql)
         log.msg(item["name_cn"] + "----入库成功")
-
+# 影人角色入库的sql
     def person_role_insert(self, cursor, item):
+        logging.debug("-----------演员角色入库信息---------")
+        logging.debug(item)
         insert_sql = """
                             replace into maoyan_person_roles (person_id,
                                                             movie_name,
+                                                            roles_id,
                                                             movie_id,
                                                             `role`,
                                                             role_duty) values (
-                                                       '%d','%s','%d','%s','%s'
+                                                       '%d','%s','%s','%d','%s','%s'
                             )
                         """ % (item["person_id"]
                                                     , item["movie_name"]
+                                                    , item["role_id"]
                                                     , item["movie_id"]
                                                     , item["role"]
                                                     , item["role_duty"]
                                )
 
         cursor.execute(insert_sql)
-        log.msg(item["name_cn"] + "----入库成功")
+        log.msg(str(item["movie_id"])+" "+str(item['person_id'])+ "----入库成功")
