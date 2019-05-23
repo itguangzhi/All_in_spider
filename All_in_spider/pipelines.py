@@ -197,9 +197,9 @@ class MaoyanMysqlPipeline(object):
 
     def handle_error(self, failure, item):
         # dbpool异常处理
-        print(failure)
+        # print(failure)
         # print("movieID:", item["movie_id"])
-        # print(item)
+        print(item)
 # 影片数据入库的sql
     def film_insert(self, cursor, item):
         insert_sql = """
@@ -226,7 +226,7 @@ class MaoyanMysqlPipeline(object):
                                )
 
         cursor.execute(insert_sql)
-        log.msg(item["name_cn"] + "----入库成功")
+        log.msg('影片:' + item["name_cn"] + "-入库成功")
 # 影人角色入库的sql
     def person_role_insert(self, cursor, item):
         logging.debug("-----------演员角色入库信息---------")
@@ -249,4 +249,4 @@ class MaoyanMysqlPipeline(object):
                                )
 
         cursor.execute(insert_sql)
-        log.msg(str(item["movie_id"])+" "+str(item['person_id'])+ "----入库成功")
+        log.msg(str('影片：' + item["movie_name"])+"  演员："+str(item['role_id']) +  "-入库成功")

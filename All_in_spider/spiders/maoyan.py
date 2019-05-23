@@ -16,7 +16,9 @@ class MaoyanSpider(scrapy.Spider):
     start_urls = [
         'https://maoyan.com/films?showType=3&offset=0', ]
 
-    start_urls = ['https://maoyan.com/films?showType=3&offset=%s' % str(id * 30) for id in range(0, 27918)]
+    start_urls = ['https://maoyan.com/films?showType=3&yearId=14&offset=%s' % str(id * 30) for id in range(0, 67)]\
+                 # +['https://maoyan.com/films?showType=2&offset=%s' % str(id * 30) for id in range(0, 5)] \
+                 # + ['https://maoyan.com/films?showType=1&offset=%s' % str(id * 30) for id in range(0, 3)]
 
     # 'https://maoyan.com/films?showType=1',
     # 'https://maoyan.com/films?showType=2',
@@ -48,12 +50,12 @@ class MaoyanSpider(scrapy.Spider):
                           callback=self.film_parse,
                           cookies=cookies,
                           dont_filter=True)
-            # 与这部电影相关人
-            celebrity_url = 'https://piaofang.maoyan.com/movie/%s/celebritylist' % movie_id
-            yield Request(url=celebrity_url,
-                          callback=self.celebrity_roles,
-                          cookies=cookies,
-                          dont_filter=True)
+            # # 在票房系统中获取与这部电影相关人（很容易被封号，请求403）
+            # celebrity_url = 'https://piaofang.maoyan.com/movie/%s/celebritylist' % movie_id
+            # yield Request(url=celebrity_url,
+            #               callback=self.celebrity_roles,
+            #               cookies=cookies,
+            #               dont_filter=True)
 
         # yield Request(url=piaofang_url,
         #               callback=self.movie_parse,
@@ -90,6 +92,8 @@ class MaoyanSpider(scrapy.Spider):
     @staticmethod
     def film_parse(response):
         movie_info_item = MaoyanMovieInfoItem()
+
+        maoyanpersonrole = MaoyanPersonRoleItem()
         """
         这个是在猫眼中请求获取的影片信息
         :param response:
@@ -135,6 +139,38 @@ class MaoyanSpider(scrapy.Spider):
         movie_info_item['date_type'] = 'movie'
 
         yield movie_info_item
+
+        # TODO E480 [2019/5/23 13:56]  在猫眼中，获取相关的影人信息
+        """
+        //div[@class="tab-content-container"]/div[2]/div/div[2]/ul/li/a/@href 获取一个在剧中类型的所有人
+        //div[@class="tab-content-container"]/div[2]/div/div[2]/div/text()  人员类型：导演，演员
+        //div[@class="tab-content-container"]/div[2]/div/div[2]/ul/li[1]/div/span/text()  演员饰演的角色
+        
+        """
+        celebrity_type_list_tmp = response.xpath('//div[@class="celebrity-container"]/div[@class="celebrity-group"]/div/text()').extract()
+        celebrity_type_list = [i.replace(' ', '').replace('\n', '') for i in celebrity_type_list_tmp]
+        for n, celebrity_type in enumerate(celebrity_type_list):
+            if n % 2 == 0:
+                j = int(n/2 + 1)
+                this_person_list_xpath = '//div[@class="tab-content-container"]/div[2]/div/div[%s]/ul/li/a/@href' % j
+                this_person_list = response.xpath(this_person_list_xpath).extract()
+                this_person_id_list = [re.findall('\d+', url)[0] for url in this_person_list]
+                for m, person_id in enumerate(this_person_id_list):
+                    one_person_role_xpath = '//div[@class="tab-content-container"]/div[2]/div/div[%s]/ul/li[%s]/div/span/text()' % (j, m+1)
+                    person_role = response.xpath(one_person_role_xpath).extract_first('-')
+
+                    maoyanpersonrole['person_id'] = int(person_id)
+                    maoyanpersonrole['movie_name'] = name_cn
+                    maoyanpersonrole['movie_id'] = int(movie_id)
+                    maoyanpersonrole['role'] = person_role
+                    maoyanpersonrole['role_duty'] = celebrity_type
+                    maoyanpersonrole['role_id'] = str(movie_id) + str(person_id) + person_role + celebrity_type
+                    maoyanpersonrole['date_type'] = 'roles'
+
+                    yield maoyanpersonrole
+
+
+
 
 
     def celebrity_roles(self, response):

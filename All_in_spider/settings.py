@@ -23,7 +23,8 @@ USER_AGENT = ua.random
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 # 设置日志级别为Info
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'INFO'
+# LOG_LEVEL = 'DEBUG'
 # 设置爬虫的并发数量
 CONCURRENT_REQUESTS = 100
 # 设置输出编码为utf8
