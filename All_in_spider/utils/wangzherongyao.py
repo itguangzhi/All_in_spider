@@ -77,3 +77,5 @@ for n,i in enumerate(hero_number):
             with open(filepath, 'wb') as f:
                 f.write(hl.content)
                 print(hero_name[n] + "ok" + str(sk_num))
+        else:
+            break
